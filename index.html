@@ -71,6 +71,13 @@
         position: relative;
         overflow-x: hidden;
       }
+      body.landing-open {
+        position: fixed;
+        top: var(--locked-scroll-y, 0);
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+      }
       .leaf-fall {
         position: fixed;
         inset: 0;
@@ -708,6 +715,10 @@
         var musicToggle = document.getElementById("musicToggle");
         var bgMusic = document.getElementById("bgMusic");
         var leafFall = document.querySelector(".leaf-fall");
+        var landingScrollY = window.scrollY;
+
+        body.classList.add("landing-open");
+        body.style.setProperty("--locked-scroll-y", "-" + landingScrollY + "px");
 
         function updateMusicUi() {
           if (!musicToggle || !bgMusic) return;
@@ -768,6 +779,9 @@
 
         function openInvitation() {
           body.classList.add("entered");
+          body.classList.remove("landing-open");
+          body.style.removeProperty("--locked-scroll-y");
+          window.scrollTo(0, landingScrollY);
           if (bgMusic) {
             bgMusic.muted = false;
             bgMusic.volume = 0.45;
