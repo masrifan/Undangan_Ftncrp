@@ -52,6 +52,12 @@
         line-height: 1.6;
       }
 
+      .subtitle ol {
+        margin: 0;
+        padding-left: 1.4em;
+        text-align: left;
+      }
+
       textarea {
         width: 100%;
         min-height: 180px;
@@ -124,6 +130,20 @@
         white-space: nowrap;
       }
 
+      .result-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .copy-link-btn {
+        padding: 8px 12px;
+        background: transparent;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        white-space: nowrap;
+      }
+
       .empty {
         color: var(--muted);
         margin: 0;
@@ -133,10 +153,15 @@
   <body>
     <div class="wrap">
       <h1>Generator Link Undangan</h1>
-      <p class="subtitle">
-        Masukkan satu nama per baris. Link undangan akan dibuat otomatis untuk
-        tiap tamu.
-      </p>
+      <div class="subtitle">
+        <ol>
+          <li>
+            Masukkan satu nama per baris. Gunakan enter atau koma untuk
+            memisahkan nama tamu.
+          </li>
+          <li>Klik tombol "Generate Link" untuk membuat link undangan.</li>
+        </ol>
+      </div>
 
       <textarea id="nameList" aria-label="Daftar nama tamu"></textarea>
 
@@ -203,13 +228,42 @@
                 ". " +
                 escapeHtml(name) +
                 "</span>" +
+                '<div class="result-actions">' +
                 '<a class="link-btn" href="' +
-                link +
+                escapeHtml(link) +
                 '" target="_blank" rel="noopener">Buka</a>' +
+                '<button class="copy-link-btn" type="button" data-link="' +
+                escapeHtml(link) +
+                '">Salin link</button>' +
+                "</div>" +
                 "</div>"
               );
             })
             .join("");
+        }
+
+        function copyText(text) {
+          if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(text);
+          }
+
+          return new Promise(function (resolve, reject) {
+            var temporaryInput = document.createElement("textarea");
+            temporaryInput.value = text;
+            temporaryInput.style.position = "fixed";
+            temporaryInput.style.opacity = "0";
+            document.body.appendChild(temporaryInput);
+            temporaryInput.select();
+
+            var copied = document.execCommand("copy");
+            temporaryInput.remove();
+
+            if (copied) {
+              resolve();
+            } else {
+              reject(new Error("Clipboard copy failed"));
+            }
+          });
         }
 
         function copyAllLinks() {
@@ -220,8 +274,7 @@
             return buildGuestLink(name);
           });
 
-          navigator.clipboard
-            .writeText(links.join("\n"))
+          copyText(links.join("\n"))
             .then(function () {
               if (copyBtn) {
                 copyBtn.textContent = "Tersalin";
@@ -233,6 +286,24 @@
             .catch(function () {
               alert("Link gagal disalin. Silakan salin manual.");
             });
+        }
+
+        if (resultBox) {
+          resultBox.addEventListener("click", function (event) {
+            var button = event.target.closest(".copy-link-btn");
+            if (!button) return;
+
+            copyText(button.dataset.link)
+              .then(function () {
+                button.textContent = "Tersalin";
+                setTimeout(function () {
+                  button.textContent = "Salin link";
+                }, 1200);
+              })
+              .catch(function () {
+                alert("Link gagal disalin. Silakan salin manual.");
+              });
+          });
         }
 
         if (generateBtn) {
