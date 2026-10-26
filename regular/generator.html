@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Generator Link Undangan</title>
+    <style>
+      :root {
+        --bg: #071a2d;
+        --panel: #0e2941;
+        --ink: #edf6ff;
+        --muted: #a9bfd8;
+        --accent: #5ea1ff;
+        --gold: #8db7ff;
+        --line: rgba(141, 183, 255, 0.28);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background:
+          linear-gradient(180deg, rgba(7, 24, 36, 0.75), rgba(7, 24, 36, 0.9)),
+          url("https://cdn.pixabay.com/video/2024/02/23/201668-916080463_tiny.jpg")
+            center/cover no-repeat fixed;
+        color: var(--ink);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .wrap {
+        width: min(760px, calc(100vw - 24px));
+        background: rgba(14, 41, 65, 0.88);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+        padding: 28px 20px 20px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: clamp(1.8rem, 3vw, 2.5rem);
+      }
+
+      .subtitle {
+        margin: 0 0 18px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .subtitle ol {
+        margin: 0;
+        padding-left: 1.4em;
+        text-align: left;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 180px;
+        padding: 16px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: rgba(5, 19, 30, 0.9);
+        color: var(--ink);
+        font: inherit;
+        resize: vertical;
+      }
+
+      textarea:focus {
+        outline: 2px solid rgba(94, 161, 255, 0.4);
+        border-color: rgba(94, 161, 255, 0.8);
+      }
+
+      .actions {
+        margin-top: 16px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      button {
+        border: 0;
+        border-radius: 999px;
+        padding: 12px 20px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .primary {
+        background: linear-gradient(135deg, var(--accent), var(--gold));
+        color: #061827;
+      }
+
+      .secondary {
+        background: transparent;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+      }
+
+      .results {
+        margin-top: 22px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .result-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: rgba(6, 20, 31, 0.46);
+      }
+
+      .name {
+        font-size: 0.95rem;
+        word-break: break-word;
+      }
+
+      .link-btn {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .result-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .copy-link-btn {
+        padding: 8px 12px;
+        background: transparent;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        white-space: nowrap;
+      }
+
+      .empty {
+        color: var(--muted);
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Generator Link Undangan</h1>
+      <div class="subtitle">
+        <ol>
+          <li>
+            Masukkan satu nama per baris. Gunakan enter atau koma untuk
+            memisahkan nama tamu.
+          </li>
+          <li>Klik tombol "Generate Link" untuk membuat link undangan.</li>
+        </ol>
+      </div>
+
+      <textarea id="nameList" aria-label="Daftar nama tamu"></textarea>
+
+      <div class="actions">
+        <button class="primary" id="generateBtn" type="button">
+          Generate Link
+        </button>
+        <button class="secondary" id="copyBtn" type="button">Copy Semua</button>
+      </div>
+
+      <div id="results" class="results"></div>
+    </div>
+
+    <script>
+      (function () {
+        var namesInput = document.getElementById("nameList");
+        var resultBox = document.getElementById("results");
+        var generateBtn = document.getElementById("generateBtn");
+        var copyBtn = document.getElementById("copyBtn");
+
+        function normalizeNames(value) {
+          return (value || "")
+            .split(/\n|,|;/)
+            .map(function (name) {
+              return name.replace(/\s+/g, " ").trim();
+            })
+            .filter(Boolean);
+        }
+
+        function buildGuestLink(name) {
+          return new URL(
+            "index.html?to=" + encodeURIComponent(name),
+            window.location.href,
+          ).href;
+        }
+
+        function escapeHtml(value) {
+          return String(value || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/\"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
+
+        function renderLinks() {
+          if (!resultBox || !namesInput) return;
+
+          var names = normalizeNames(namesInput.value);
+
+          if (!names.length) {
+            resultBox.innerHTML =
+              '<p class="empty">Masukkan nama tamu terlebih dahulu.</p>';
+            return;
+          }
+
+          resultBox.innerHTML = names
+            .map(function (name, index) {
+              var link = buildGuestLink(name);
+              return (
+                '<div class="result-item">' +
+                '<span class="name">' +
+                (index + 1) +
+                ". " +
+                escapeHtml(name) +
+                "</span>" +
+                '<div class="result-actions">' +
+                '<a class="link-btn" href="' +
+                escapeHtml(link) +
+                '" target="_blank" rel="noopener">Buka</a>' +
+                '<button class="copy-link-btn" type="button" data-link="' +
+                escapeHtml(link) +
+                '">Salin link</button>' +
+                "</div>" +
+                "</div>"
+              );
+            })
+            .join("");
+        }
+
+        function copyText(text) {
+          if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(text);
+          }
+
+          return new Promise(function (resolve, reject) {
+            var temporaryInput = document.createElement("textarea");
+            temporaryInput.value = text;
+            temporaryInput.style.position = "fixed";
+            temporaryInput.style.opacity = "0";
+            document.body.appendChild(temporaryInput);
+            temporaryInput.select();
+
+            var copied = document.execCommand("copy");
+            temporaryInput.remove();
+
+            if (copied) {
+              resolve();
+            } else {
+              reject(new Error("Clipboard copy failed"));
+            }
+          });
+        }
+
+        function copyAllLinks() {
+          if (!namesInput) return;
+
+          var names = normalizeNames(namesInput.value);
+          var links = names.map(function (name) {
+            return buildGuestLink(name);
+          });
+
+          copyText(links.join("\n"))
+            .then(function () {
+              if (copyBtn) {
+                copyBtn.textContent = "Tersalin";
+                setTimeout(function () {
+                  copyBtn.textContent = "Copy Semua";
+                }, 1200);
+              }
+            })
+            .catch(function () {
+              alert("Link gagal disalin. Silakan salin manual.");
+            });
+        }
+
+        if (resultBox) {
+          resultBox.addEventListener("click", function (event) {
+            var button = event.target.closest(".copy-link-btn");
+            if (!button) return;
+
+            copyText(button.dataset.link)
+              .then(function () {
+                button.textContent = "Tersalin";
+                setTimeout(function () {
+                  button.textContent = "Salin link";
+                }, 1200);
+              })
+              .catch(function () {
+                alert("Link gagal disalin. Silakan salin manual.");
+              });
+          });
+        }
+
+        if (generateBtn) {
+          generateBtn.addEventListener("click", renderLinks);
+        }
+
+        if (copyBtn) {
+          copyBtn.addEventListener("click", copyAllLinks);
+        }
+
+        renderLinks();
+      })();
+    </script>
+  </body>
+</html>
