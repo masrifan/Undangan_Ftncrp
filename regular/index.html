@@ -596,7 +596,6 @@
       id="bgMusic"
       loop
       preload="auto"
-      muted
       src="assets/alif_ba_ta_upin_ipin.mp3"
     ></audio>
     <button
@@ -751,6 +750,7 @@
 
         function autoPlayMusic() {
           if (!bgMusic) return;
+          bgMusic.muted = false;
           bgMusic.volume = 0.45;
           bgMusic.play().catch(function () {
             console.log(
