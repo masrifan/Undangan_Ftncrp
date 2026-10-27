@@ -2,111 +2,140 @@
 <html lang="id">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Nunito:wght@400;600;700&amp;family=Amiri:wght@400;700&amp;display=swap"
+    />
     <title>Generator Link Undangan</title>
     <style>
       :root {
-        --bg: #f7f2e8;
-        --panel: #fffdf8;
-        --ink: #344538;
-        --muted: #737b6c;
-        --accent: #71866c;
-        --gold: #b18a50;
-        --line: rgba(177, 138, 80, 0.34);
+        --bg: #3a2766;
+        --card: rgba(46, 30, 74, 0.58);
+        --ink: #ffffff;
+        --muted: rgba(255, 255, 255, 0.8);
+        --accent: #ff8fc7;
+        --gold: #ffd166;
+        --sky: #7fd8ff;
+        --line: rgba(255, 255, 255, 0.24);
+        --sunset: linear-gradient(
+          180deg,
+          #5b3f9e 0%,
+          #a255b5 28%,
+          #ec6fa5 58%,
+          #ffa86b 84%,
+          #ffcf7a 100%
+        );
+        --castle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300' preserveAspectRatio='none'%3E%0A%3Cdefs%3E%3Cg id='c'%3E%0A%3Crect x='20' y='120' width='40' height='160' fill='%23f6a1b4'/%3E%0A%3Cpolygon points='14,120 40,60 66,120' fill='%23ff6f7d'/%3E%0A%3Crect x='140' y='130' width='40' height='150' fill='%23f6a1b4'/%3E%0A%3Cpolygon points='134,130 160,72 186,130' fill='%23ff6f7d'/%3E%0A%3Crect x='45' y='160' width='110' height='120' fill='%23f08aa8'/%3E%0A%3Crect x='78' y='90' width='54' height='190' fill='%23b79af0'/%3E%0A%3Cpolygon points='72,90 105,12 138,90' fill='%234a6fd8'/%3E%0A%3Crect x='100' y='2' width='3' height='14' fill='%23ffd166'/%3E%0A%3Cpolygon points='103,2 120,8 103,14' fill='%23ff6f7d'/%3E%0A%3Cpath d='M90 280 V236 a15 15 0 0 1 30 0 V280Z' fill='%23ffd166'/%3E%0A%3Ccircle cx='105' cy='130' r='8' fill='%23ffe9a6'/%3E%0A%3Ccircle cx='40' cy='160' r='5' fill='%23ffe9a6'/%3E%0A%3Ccircle cx='160' cy='170' r='5' fill='%23ffe9a6'/%3E%0A%3C/g%3E%3C/defs%3E%0A%3Cpath d='M0 285 Q200 255 400 280 T800 285 V300 H0Z' fill='%23b4488a' opacity='.75'/%3E%0A%3Cuse href='%23c' transform='translate(30 8)'/%3E%0A%3Cuse href='%23c' transform='translate(470 50) scale(.82)'/%3E%0A%3Cpath d='M0 292 Q220 270 420 290 T800 292 V300 H0Z' fill='%238f3a86'/%3E%0A%3C/svg%3E");
+        --serif: "Fredoka", "Nunito", system-ui, sans-serif;
+        --sans: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        --arab: "Amiri", "Traditional Arabic", serif;
       }
-
       * {
         box-sizing: border-box;
       }
-
       body {
         margin: 0;
         min-height: 100vh;
         display: grid;
         place-items: center;
-        background:
-          radial-gradient(ellipse at 8% 12%, rgba(177, 138, 80, 0.16), transparent 32%),
-          radial-gradient(ellipse at 92% 82%, rgba(113, 134, 108, 0.18), transparent 34%),
-          linear-gradient(135deg, #fbf8f0, #f0eadb);
+        background: #a255b5;
         color: var(--ink);
-        font-family: Arial, Helvetica, sans-serif;
+        font-family: var(--sans);
+        position: relative;
       }
-
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          var(--castle) repeat-x left bottom / auto 34vh,
+          radial-gradient(ellipse at 20% 10%, rgba(255, 255, 255, 0.14), transparent 40%),
+          radial-gradient(ellipse at 85% 20%, rgba(255, 190, 220, 0.25), transparent 38%),
+          var(--sunset);
+        pointer-events: none;
+        z-index: 0;
+      }
       .wrap {
+        position: relative;
+        z-index: 1;
         width: min(760px, calc(100vw - 24px));
-        background: rgba(255, 253, 248, 0.9);
+        margin: 16px 0;
+        background: rgba(46, 30, 74, 0.62);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
         border: 1px solid var(--line);
-        border-radius: 22px;
-        box-shadow: 0 24px 70px rgba(68, 72, 53, 0.14);
+        border-radius: 28px;
+        box-shadow: 0 24px 70px rgba(40, 10, 70, 0.4);
         padding: 28px 20px 20px;
       }
-
       h1 {
         margin: 0 0 8px;
+        font-family: var(--serif);
+        font-weight: 600;
         font-size: clamp(1.8rem, 3vw, 2.5rem);
       }
-
+      h1::before {
+        content: "🎈 ";
+      }
       .subtitle {
         margin: 0 0 18px;
         color: var(--muted);
         line-height: 1.6;
       }
-
       .subtitle ol {
         margin: 0;
         padding-left: 1.4em;
         text-align: left;
       }
-
       textarea {
         width: 100%;
         min-height: 180px;
         padding: 16px;
-        border-radius: 14px;
+        border-radius: 18px;
         border: 1px solid var(--line);
-        background: rgba(247, 242, 232, 0.84);
-        color: var(--ink);
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
         font: inherit;
         resize: vertical;
       }
-
       textarea:focus {
-        outline: 2px solid rgba(113, 134, 108, 0.28);
-        border-color: rgba(113, 134, 108, 0.72);
+        outline: 2px solid rgba(127, 216, 255, 0.45);
+        border-color: var(--sky);
       }
-
       .actions {
         margin-top: 16px;
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
       }
-
       button {
         border: 0;
         border-radius: 999px;
-        padding: 12px 20px;
-        font-weight: 700;
+        padding: 12px 22px;
+        font-family: var(--serif);
+        font-size: 1rem;
+        font-weight: 600;
         cursor: pointer;
       }
-
       .primary {
-        background: linear-gradient(135deg, var(--accent), var(--gold));
-        color: #fffdf8;
+        background: linear-gradient(135deg, #ff9f68, #ff6fa5);
+        color: #fff;
+        box-shadow: 0 8px 22px rgba(255, 111, 165, 0.4);
       }
-
       .secondary {
         background: transparent;
-        border: 1px solid var(--accent);
-        color: var(--accent);
+        border: 1.5px solid var(--sky);
+        color: var(--sky);
       }
-
       .results {
         margin-top: 22px;
         display: grid;
         gap: 10px;
       }
-
       .result-item {
         display: flex;
         justify-content: space-between;
@@ -114,36 +143,32 @@
         gap: 12px;
         padding: 10px 12px;
         border: 1px solid var(--line);
-        border-radius: 12px;
-        background: rgba(6, 20, 31, 0.46);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.1);
       }
-
       .name {
         font-size: 0.95rem;
         word-break: break-word;
       }
-
       .link-btn {
-        color: var(--accent);
+        color: var(--gold);
         text-decoration: none;
         font-weight: 700;
         white-space: nowrap;
       }
-
       .result-actions {
         display: flex;
         align-items: center;
         gap: 12px;
       }
-
       .copy-link-btn {
         padding: 8px 12px;
         background: transparent;
-        border: 1px solid var(--accent);
-        color: var(--accent);
+        border: 1px solid var(--sky);
+        color: var(--sky);
+        font-size: 0.9rem;
         white-space: nowrap;
       }
-
       .empty {
         color: var(--muted);
         margin: 0;
