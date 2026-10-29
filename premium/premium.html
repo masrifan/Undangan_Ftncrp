@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <title>Undangan Aqiqah</title>
+    <title>Undangan Tasyakuran Rumah &amp; Aqiqah</title>
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Nunito:wght@400;600;700&amp;family=Amiri:wght@400;700&amp;display=swap"
@@ -619,7 +619,7 @@
         <div class="mascots" aria-hidden="true">🐉🦄🧸</div>
         <div class="small">Undangan</div>
         <h2>Aqiqah</h2>
-        <p class="sub">Tasyakuran Aqiqah Del piero</p>
+        <p class="sub">Tasyakuran Rumah &amp; Aqiqah Fathan Rizqi</p>
         <button id="openInvitation" class="landing-btn" type="button">
           Buka Undangan
         </button>
@@ -634,14 +634,14 @@
       <div class="wrap invitation-shell">
         <section class="hero">
           <div class="small">Undangan</div>
-          <h1>Aqiqah</h1>
+          <h1>Tasyakuran Rumah <span>&amp;</span> Aqiqah</h1>
           <div class="orn" aria-hidden="true">🎈 ✦ 🦄 ✦ 🎈</div>
           <p class="muted">
             Dengan rasa syukur atas nikmat dan karunia-Nya, kami mengundang
             Bapak/Ibu/Saudara/i untuk hadir dalam acara aqiqah putra pertama
             kami
           </p>
-          <div class="baby">Del piero</div>
+          <div class="baby">Fathan Rizqi Syachrurrohman</div>
           <div class="to">Kepada Yth.<b id="guest">Bapak/Ibu/Saudara/i</b></div>
         </section>
 
@@ -668,16 +668,16 @@
           <div class="row">
             <div class="k">Acara</div>
             <div class="v">
-              Doa tasyakuran aqiqah &amp; makan bersama
+              Doa tasyakuran rumah, aqiqah &amp; makan bersama
             </div>
           </div>
           <div class="row">
             <div class="k">Lokasi</div>
-            <div class="v">Kota turin</div>
+            <div class="v">Bumi Indah City (Orchid)<br />Blok ML 10</div>
           </div>
           <a
             class="btn"
-            href="https://maps.google.com/?q=Turin+italia"
+            href="https://maps.google.com/?q=Bumi+Indah+City+Orchid+Blok+ML+10"
             target="_blank"
             rel="noopener"
             >Buka Google Maps</a
@@ -702,7 +702,7 @@
           </p>
           <div class="orn" aria-hidden="true">✦ 🧸 ✦</div>
           <div>Kami yang berbahagia,</div>
-          <div class="fam">Ayah &amp; Ibu</div>
+          <div class="fam">Rif’an &amp; Meita</div>
         </section>
       </div>
     </div>
@@ -794,6 +794,14 @@
 
         function openInvitation() {
           body.classList.add("entered");
+          var rootEl = document.documentElement;
+          var reqFs = rootEl.requestFullscreen || rootEl.webkitRequestFullscreen;
+          if (reqFs) {
+            try {
+              var r = reqFs.call(rootEl);
+              if (r && r.catch) r.catch(function () {});
+            } catch (e) {}
+          }
           body.classList.remove("landing-open");
           body.style.removeProperty("--locked-scroll-y");
           window.scrollTo(0, landingScrollY);
